@@ -1,0 +1,33 @@
+{
+  "name": "lovely-cmd",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "lint": "npx eslint ./src/**",
+    "lint:fix": "npx eslint ./src/** --fix",
+    "start": "npx tsx ./src/index.ts",
+    "migrate": "npx tsx ./bin/migrate.ts",
+    "test": "npx vitest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@eslint/js": "^9.21.0",
+    "@types/node": "^22.13.5",
+    "eslint": "^9.21.0",
+    "globals": "^16.0.0",
+    "tsx": "^4.19.3",
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.24.1",
+    "vitest": "^3.0.6"
+  },
+  "dependencies": {
+    "@types/ramda": "^0.30.2",
+    "dotenv": "^16.4.7",
+    "node-fetch": "^3.3.2",
+    "pg-promise": "^11.10.2",
+    "ramda": "^0.30.1"
+  }
+}

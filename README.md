@@ -69,9 +69,11 @@ To quickly set up PostgreSQL locally, run:
 ```sh
 docker compose up -d
 
-````
+```
 
 ### Environment Variables
+
+Create .env file at project root with the following vars
 ```sh
 DB_HOST=localhost
 DB_PORT=5432
