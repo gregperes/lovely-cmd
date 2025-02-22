@@ -15,8 +15,6 @@ PostgreSQL database, and provides various ways to query and display the data.
   - [Available Commands](#available-commands)
 - [Testing](#testing)
 - [Linting](#linting)
-- [Project Structure](#project-structure)
-- [Further Improvements](#further-improvements)
 - [License](#license)
 
 ---
@@ -101,9 +99,8 @@ Use npm scripts to run the main file (src/index.ts) through tsx:
 ```sh
 pnpm start <command> [options]
 ```
----
 
-## Available Commands
+### Available Commands
 
 Fetch and store a GitHub user
 ```sh
