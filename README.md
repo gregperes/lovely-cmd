@@ -69,7 +69,7 @@ To quickly set up PostgreSQL locally, run:
 ```sh
 docker compose up -d
 
-````
+```
 
 ### Environment Variables
 ```sh
