@@ -53,16 +53,15 @@ PostgreSQL database, and provides various ways to query and display the data.
 ### Clone and Install
 
 1. **Clone this repository**:
-
-   ```bash
-   git clone https://github.com/gregperes/lovely-cmd.git
-   cd lovely-cmd
-  ```
+```bash
+git clone https://github.com/gregperes/lovely-cmd.git
+cd lovely-cmd
+```
 
 2. **Install dependencies:**
-  ```sh
-  pnpm install
-  ```
+```sh
+pnpm install
+```
 
 ### Running Docker Compose
 
