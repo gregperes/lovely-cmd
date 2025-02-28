@@ -12,11 +12,22 @@ export const insertUser = async (
     company
   }: User
 ): Promise<number> => {
-  const sql = `
+  const existsSql = `SELECT id FROM users WHERE github_login = ${'github_login'}`
+  const userExist = await db.oneOrNone(existsSql, { github_login: githubLogin })
+
+  if (userExist) {
+    throw new Error(`User with login "${githubLogin}" already exists`)
+  }
+
+  const insertSql = `
     INSERT INTO users
       (github_login, name, location, bio, company)
     VALUES
-      ($1, $2, $3, $4, $5)
+      ${'github_login'}, 
+      ${'name'}, 
+      ${'location'}, 
+      ${'bio'}, 
+      ${'company'}
     ON CONFLICT (github_login) DO UPDATE
       SET name = EXCLUDED.name,
           location = EXCLUDED.location,
@@ -24,13 +35,13 @@ export const insertUser = async (
           company = EXCLUDED.company
     RETURNING id
   `
-  const result = await db.one(sql, [
-    githubLogin,
+  const result = await db.one(insertSql, {
+    github_login: githubLogin,
     name,
     location,
     bio,
     company,
-  ])
+  })
   
   return result.id
 }

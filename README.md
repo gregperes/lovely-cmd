@@ -62,15 +62,6 @@ cd lovely-cmd
 ```sh
 pnpm install
 ```
-
-### Running Docker Compose
-
-To quickly set up PostgreSQL locally, run:
-```sh
-docker compose up -d
-
-```
-
 ### Environment Variables
 
 Create .env file at project root with the following vars
@@ -82,11 +73,19 @@ DB_USER=postgres
 DB_PASS=mysecretpassword
 ```
 
+### Running Docker Compose
+
+To quickly set up PostgreSQL locally, run:
+```sh
+docker compose up -d
+
+```
+
 These variables will be used by the application to connect to the Postgres database.
 
 ### Database Migrations
 
-You can run the database migrations directly via Node (using pg-promise):
+IMPORTANT: run the database migrations directly via Node (using pg-promise):
 
 ```sh
 pnpm run migrate
