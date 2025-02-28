@@ -4,7 +4,12 @@ import { useTry } from '../hooks/useTry'
 export const handleListUsers = async (): Promise<void> => {
   const [err] = await useTry(async () => {
     const users = await userRepository.listUsers()
-    console.table(users)
+    console.table(
+      users.map(u => ({
+        ...u,
+        languages: u.languages.join(', '),
+      }))
+    )
   })
 
   if (err) {

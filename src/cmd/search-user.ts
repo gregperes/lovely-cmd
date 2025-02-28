@@ -17,10 +17,6 @@ export const handleSearchUsers = async (args: string[]): Promise<void> => {
   const locArg = getArgValue(args, '--loc')
   const langArg = getArgValue(args, '--lang')
 
-  console.log({ locArg, langArg })
-
-  console.log({ a:  args.indexOf('--lang') })
-
   if (!locArg && !langArg) {
     console.log(
       'ATTENTION: You should provide at least one of following [--loc, --lang]'

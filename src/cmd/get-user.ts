@@ -12,9 +12,7 @@ export const handleGetUser = async (args: string[]): Promise<void> => {
     }
 
     const user = await github.fetchUser(login)
-
-    console.log({ user })
-    user.id = await userRepository.insertUser(user)
+    user.id = await userRepository.createOrUpdateUser(user)
 
     const languages = await github.fetchUserLanguages(login)
     await userRepository.insertLanguages(user.id, languages)

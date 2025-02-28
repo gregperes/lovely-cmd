@@ -1,9 +1,9 @@
-import { map, uniq } from 'ramda'
+import { uniq } from 'ramda'
 
-import { User } from '../domain'
+import { User, UserWithLanguages } from '../domain'
 import { db } from './db'
 
-export const insertUser = async (
+export const createOrUpdateUser = async (
   {
     githubLogin,
     name,
@@ -12,22 +12,21 @@ export const insertUser = async (
     company
   }: User
 ): Promise<number> => {
-  const existsSql = `SELECT id FROM users WHERE github_login = ${'github_login'}`
-  const userExist = await db.oneOrNone(existsSql, { github_login: githubLogin })
-
-  if (userExist) {
-    throw new Error(`User with login "${githubLogin}" already exists`)
-  }
-
-  const insertSql = `
-    INSERT INTO users
-      (github_login, name, location, bio, company)
-    VALUES
-      ${'github_login'}, 
-      ${'name'}, 
-      ${'location'}, 
-      ${'bio'}, 
-      ${'company'}
+  const sql = `
+    INSERT INTO users (
+      github_login, 
+      name, 
+      location, 
+      bio, 
+      company
+    ) 
+    VALUES (
+      $(github_login), 
+      $(name), 
+      $(location), 
+      $(bio), 
+      $(company)
+    )
     ON CONFLICT (github_login) DO UPDATE
       SET name = EXCLUDED.name,
           location = EXCLUDED.location,
@@ -35,7 +34,8 @@ export const insertUser = async (
           company = EXCLUDED.company
     RETURNING id
   `
-  const result = await db.one(insertSql, {
+
+  const result = await db.one(sql, {
     github_login: githubLogin,
     name,
     location,
@@ -52,21 +52,46 @@ export const insertLanguages = async (
 ): Promise<void> => {
   const uniqueLangs = uniq(languages)
 
-  const promises = map((lang: string) => {
-    const sql = `
-      INSERT INTO languages (user_id, language)
-      VALUES ($1, $2)
-      ON CONFLICT DO NOTHING
-    `
+  await db.tx(async t => {
+    const deleteSql = 'DELETE FROM languages WHERE user_id = $(userId)'
+    await t.none(deleteSql, { userId })
+  
+    if (uniqueLangs.length > 0) {
+      const insertSql = `
+        INSERT INTO languages (user_id, language)
+        SELECT $(userId), unnest($(langs)::text[])
+      `
 
-    return db.none(sql, [userId, lang])
-  }, uniqueLangs)
-
-  await Promise.all(promises)
+      await t.none(insertSql, {
+        userId,
+        langs: uniqueLangs
+      })
+    }
+  })
 }
 
-export const listUsers = async (): Promise<User[]> => {
-  const sql = 'SELECT * FROM users ORDER BY id ASC'
+export const listUsers = async (): Promise<UserWithLanguages[]> => {
+  const sql = `
+    SELECT
+      u.id,
+      u.github_login as githubLogin,
+      u.name,
+      u.location,
+      u.bio,
+      u.company,
+      array_remove(array_agg(l.language), NULL) AS languages
+    FROM users u
+    LEFT JOIN languages l 
+      ON l.user_id = u.id
+    GROUP BY 
+      u.id, 
+      u.github_login, 
+      u.name, 
+      u.location, 
+      u.bio, 
+      u.company
+    ORDER BY u.id
+  `
   return db.manyOrNone(sql)
 }
 

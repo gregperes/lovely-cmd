@@ -6,3 +6,7 @@ export type User = {
   bio: string
   company: string
 }
+
+export type UserWithLanguages = User & {
+  languages: string[]
+}
