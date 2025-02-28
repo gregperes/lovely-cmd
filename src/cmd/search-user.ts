@@ -3,9 +3,7 @@ import { useTry } from '../hooks/useTry'
 
 const getArgValue = (args: string[], flag: string): string | null => {
   const index = args.indexOf(flag)
-
-  console.log({ args, flag, index })
-
+  
   if (index !== -1 && index < args.length - 1) {
     return args[index + 1]
   }
